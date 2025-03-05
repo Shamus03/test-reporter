@@ -1,13 +1,13 @@
 ![Tests failed](https://img.shields.io/badge/tests-3%20passed%2C%205%20failed%2C%202%20skipped-critical)
 |Report|Passed|Failed|Skipped|Time|
 |:---|---:|---:|---:|---:|
-|fixtures/dotnet-nunit-legacy.xml|3 ✅|5 ❌|2 ⚪|0ms|
+|fixtures/dotnet-nunit-legacy.xml|3 ✅|5 ❌|2 ⚪|9ms|
 ## ❌ <a id="user-content-r0" href="#r0">fixtures/dotnet-nunit-legacy.xml</a>
-**10** tests were completed in **0ms** with **3** passed, **5** failed and **2** skipped.
+**10** tests were completed in **9ms** with **3** passed, **5** failed and **2** skipped.
 |Test suite|Passed|Failed|Skipped|Time|
 |:---|---:|---:|---:|---:|
-|[C:\Users\james_t\source\repos\NUnitLegacy\NUnitLegacy.sln.C:\Users\james_t\source\repos\NUnitLegacy\NUnitLegacyTests\bin\Debug\NUnitLegacyTests.dll.NUnitLegacyTests](#r0s0)|3 ✅|5 ❌|2 ⚪|NaNms|
-### ❌ <a id="user-content-r0s0" href="#r0s0">C:\Users\james_t\source\repos\NUnitLegacy\NUnitLegacy.sln.C:\Users\james_t\source\repos\NUnitLegacy\NUnitLegacyTests\bin\Debug\NUnitLegacyTests.dll.NUnitLegacyTests</a>
+|[C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacy.sln.C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacyTests\bin\Debug\NUnitLegacyTests.dll.NUnitLegacyTests](#r0s0)|3 ✅|5 ❌|2 ⚪|NaNms|
+### ❌ <a id="user-content-r0s0" href="#r0s0">C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacy.sln.C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacyTests\bin\Debug\NUnitLegacyTests.dll.NUnitLegacyTests</a>
 ```
 CalculatorTests
   ✅ NUnitLegacyTests.CalculatorTests.Is_Even_Number(2)
