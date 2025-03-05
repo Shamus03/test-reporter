@@ -15,7 +15,7 @@ describe('dotnet-nunit-legacy tests', () => {
 
     const opts: ParseOptions = {
       parseErrors: true,
-      trackedFiles: ['DotnetTests.Unit/Calculator.cs', 'DotnetTests.NUnitLegacyTests/CalculatorTests.cs']
+      trackedFiles: ['MyLibrary/Calculator.cs', 'NUnitLegacyTests/CalculatorTests.cs']
     }
 
     const parser = new DotnetNunitLegacyParser(opts)

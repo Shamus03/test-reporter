@@ -6,29 +6,29 @@
 **10** tests were completed in **9ms** with **3** passed, **5** failed and **2** skipped.
 |Test suite|Passed|Failed|Skipped|Time|
 |:---|---:|---:|---:|---:|
-|[C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacy.sln.C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacyTests\bin\Debug\NUnitLegacyTests.dll.NUnitLegacyTests](#r0s0)|3 ✅|5 ❌|2 ⚪|NaNms|
-### ❌ <a id="user-content-r0s0" href="#r0s0">C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacy.sln.C:\Users\james_t\Documents\git\test-reporter\reports\dotnet-nunit-legacy\NUnitLegacyTests\bin\Debug\NUnitLegacyTests.dll.NUnitLegacyTests</a>
+|[NUnitLegacyTests.CalculatorTests](#r0s0)|3 ✅|5 ❌|2 ⚪|NaNms|
+### ❌ <a id="user-content-r0s0" href="#r0s0">NUnitLegacyTests.CalculatorTests</a>
 ```
 CalculatorTests
-  ✅ NUnitLegacyTests.CalculatorTests.Is_Even_Number(2)
-  ❌ NUnitLegacyTests.CalculatorTests.Is_Even_Number(3)
+  ✅ Is_Even_Number(2)
+  ❌ Is_Even_Number(3)
 	  Expected: True
 	  But was:  False
 	
-  ❌ NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest
+  ❌ Exception_In_TargetTest
 	System.DivideByZeroException : Attempted to divide by zero.
-  ❌ NUnitLegacyTests.CalculatorTests.Exception_In_Test
+  ❌ Exception_In_Test
 	System.Exception : Test
-  ❌ NUnitLegacyTests.CalculatorTests.Failing_Test
+  ❌ Failing_Test
 	  Expected: 3
 	  But was:  2
 	
-  ⚪ NUnitLegacyTests.CalculatorTests.Inconclusive_Test
+  ⚪ Inconclusive_Test
 	couldn't run test for some reason
-  ✅ NUnitLegacyTests.CalculatorTests.Passing_Test
-  ✅ NUnitLegacyTests.CalculatorTests.Passing_Test_With_Description
-  ⚪ NUnitLegacyTests.CalculatorTests.Skipped_Test
+  ✅ Passing_Test
+  ✅ Passing_Test_With_Description
+  ⚪ Skipped_Test
 	Skipped
-  ❌ NUnitLegacyTests.CalculatorTests.Timeout_Test
+  ❌ Timeout_Test
 	Test exceeded Timeout value of 1ms
 ```

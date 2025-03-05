@@ -789,7 +789,7 @@ class DotnetNunitLegacyParser {
         // But ignore "Theory" suites.
         const suitesWithoutTheories = suitePath.filter(suite => suite.$.type !== 'Theory');
         const suiteName = suitesWithoutTheories
-            .slice(0, suitesWithoutTheories.length - 1)
+            .filter(suite => suite.$.type !== 'Assembly' && suite.$.type !== 'Project')
             .map(suite => suite.$.name)
             .join('.');
         const groupName = suitesWithoutTheories[suitesWithoutTheories.length - 1].$.name;
@@ -803,7 +803,7 @@ class DotnetNunitLegacyParser {
             existingGroup = new test_results_1.TestGroupResult(groupName, []);
             existingSuite.groups.push(existingGroup);
         }
-        existingGroup.tests.push(new test_results_1.TestCaseResult(testCase.$.name, this.getTestExecutionResult(testCase), parseFloat(testCase.$.time), this.getTestCaseError(testCase)));
+        existingGroup.tests.push(new test_results_1.TestCaseResult(testCase.$.name.startsWith(suiteName + '.') ? testCase.$.name.substring(suiteName.length + 1) : testCase.$.name, this.getTestExecutionResult(testCase), parseFloat(testCase.$.time), this.getTestCaseError(testCase)));
     }
     getTestExecutionResult(test) {
         if (test.$.result === 'Failed' || test.failure)
