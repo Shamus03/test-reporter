@@ -1,12 +1,12 @@
 ![Tests failed](https://img.shields.io/badge/tests-3%20passed%2C%205%20failed%2C%202%20skipped-critical)
 |Report|Passed|Failed|Skipped|Time|
 |:---|---:|---:|---:|---:|
-|fixtures/dotnet-nunit-legacy.xml|3 ✅|5 ❌|2 ⚪|9ms|
+|fixtures/dotnet-nunit-legacy.xml|3 ✅|5 ❌|2 ⚪|73ms|
 ## ❌ <a id="user-content-r0" href="#r0">fixtures/dotnet-nunit-legacy.xml</a>
-**10** tests were completed in **9ms** with **3** passed, **5** failed and **2** skipped.
+**10** tests were completed in **73ms** with **3** passed, **5** failed and **2** skipped.
 |Test suite|Passed|Failed|Skipped|Time|
 |:---|---:|---:|---:|---:|
-|[NUnitLegacyTests.CalculatorTests](#r0s0)|3 ✅|5 ❌|2 ⚪|NaNms|
+|[NUnitLegacyTests.CalculatorTests](#r0s0)|3 ✅|5 ❌|2 ⚪|73ms|
 ### ❌ <a id="user-content-r0s0" href="#r0s0">NUnitLegacyTests.CalculatorTests</a>
 ```
 CalculatorTests

@@ -13,7 +13,7 @@ TestRunResult {
               "error": undefined,
               "name": "Is_Even_Number(2)",
               "result": "success",
-              "time": 0.001,
+              "time": 1,
             },
             TestCaseResult {
               "error": {
@@ -27,7 +27,7 @@ TestRunResult {
               },
               "name": "Is_Even_Number(3)",
               "result": "failed",
-              "time": 0.001,
+              "time": 1,
             },
             TestCaseResult {
               "error": {
@@ -40,7 +40,7 @@ at NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest() in C:\\Users\\jame
               },
               "name": "Exception_In_TargetTest",
               "result": "failed",
-              "time": 0.026,
+              "time": 26,
             },
             TestCaseResult {
               "error": {
@@ -52,7 +52,7 @@ at NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest() in C:\\Users\\jame
               },
               "name": "Exception_In_Test",
               "result": "failed",
-              "time": 0.002,
+              "time": 2,
             },
             TestCaseResult {
               "error": {
@@ -66,7 +66,7 @@ at NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest() in C:\\Users\\jame
               },
               "name": "Failing_Test",
               "result": "failed",
-              "time": 0.014,
+              "time": 14,
             },
             TestCaseResult {
               "error": {
@@ -77,7 +77,7 @@ at NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest() in C:\\Users\\jame
               },
               "name": "Inconclusive_Test",
               "result": "skipped",
-              "time": 0.001,
+              "time": 1,
             },
             TestCaseResult {
               "error": undefined,
@@ -100,7 +100,7 @@ at NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest() in C:\\Users\\jame
               },
               "name": "Skipped_Test",
               "result": "skipped",
-              "time": NaN,
+              "time": 0,
             },
             TestCaseResult {
               "error": {
@@ -111,7 +111,7 @@ at NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest() in C:\\Users\\jame
               },
               "name": "Timeout_Test",
               "result": "failed",
-              "time": 0.028,
+              "time": 28,
             },
           ],
         },
@@ -120,6 +120,6 @@ at NUnitLegacyTests.CalculatorTests.Exception_In_TargetTest() in C:\\Users\\jame
       "totalTime": undefined,
     },
   ],
-  "totalTime": 9,
+  "totalTime": undefined,
 }
 `;

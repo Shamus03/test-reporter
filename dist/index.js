@@ -759,9 +759,8 @@ class DotnetNunitLegacyParser {
     }
     getTestRunResult(path, nunit) {
         const suites = [];
-        const time = parseFloat(nunit['test-results'].$.time);
         this.populateTestCasesRecursive(suites, [], nunit['test-results']['test-suite']);
-        return new test_results_1.TestRunResult(path, suites, time);
+        return new test_results_1.TestRunResult(path, suites);
     }
     populateTestCasesRecursive(result, suitePath, testSuites) {
         if (testSuites === undefined) {
@@ -803,7 +802,7 @@ class DotnetNunitLegacyParser {
             existingGroup = new test_results_1.TestGroupResult(groupName, []);
             existingSuite.groups.push(existingGroup);
         }
-        existingGroup.tests.push(new test_results_1.TestCaseResult(testCase.$.name.startsWith(suiteName + '.') ? testCase.$.name.substring(suiteName.length + 1) : testCase.$.name, this.getTestExecutionResult(testCase), parseFloat(testCase.$.time), this.getTestCaseError(testCase)));
+        existingGroup.tests.push(new test_results_1.TestCaseResult(testCase.$.name.startsWith(suiteName + '.') ? testCase.$.name.substring(suiteName.length + 1) : testCase.$.name, this.getTestExecutionResult(testCase), testCase.$.time ? parseFloat(testCase.$.time) * 1000 : 0, this.getTestCaseError(testCase)));
     }
     getTestExecutionResult(test) {
         if (test.$.result === 'Failed' || test.failure)

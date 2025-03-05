@@ -34,11 +34,10 @@ export class DotnetNunitLegacyParser implements TestParser {
 
   private getTestRunResult(path: string, nunit: NunitReport): TestRunResult {
     const suites: TestSuiteResult[] = []
-    const time = parseFloat(nunit['test-results'].$.time)
 
     this.populateTestCasesRecursive(suites, [], nunit['test-results']['test-suite'])
 
-    return new TestRunResult(path, suites, time)
+    return new TestRunResult(path, suites)
   }
 
   private populateTestCasesRecursive(
@@ -99,7 +98,7 @@ export class DotnetNunitLegacyParser implements TestParser {
       new TestCaseResult(
         testCase.$.name.startsWith(suiteName + '.') ? testCase.$.name.substring(suiteName.length + 1) : testCase.$.name,
         this.getTestExecutionResult(testCase),
-        parseFloat(testCase.$.time),
+        testCase.$.time ? parseFloat(testCase.$.time) * 1000 : 0,
         this.getTestCaseError(testCase)
       )
     )
