@@ -242,6 +242,7 @@ const get_annotations_1 = __nccwpck_require__(5867);
 const get_report_1 = __nccwpck_require__(3737);
 const dart_json_parser_1 = __nccwpck_require__(4528);
 const dotnet_nunit_parser_1 = __nccwpck_require__(5706);
+const dotnet_nunit_legacy_parser_1 = __nccwpck_require__(6956);
 const dotnet_trx_parser_1 = __nccwpck_require__(2664);
 const java_junit_parser_1 = __nccwpck_require__(676);
 const jest_junit_parser_1 = __nccwpck_require__(1113);
@@ -426,6 +427,8 @@ class TestReporter {
                 return new dart_json_parser_1.DartJsonParser(options, 'dart');
             case 'dotnet-nunit':
                 return new dotnet_nunit_parser_1.DotnetNunitParser(options);
+            case 'dotnet-nunit-legacy':
+                return new dotnet_nunit_legacy_parser_1.DotnetNunitLegacyParser(options);
             case 'dotnet-trx':
                 return new dotnet_trx_parser_1.DotnetTrxParser(options);
             case 'flutter-json':
@@ -721,6 +724,134 @@ function isDoneEvent(event) {
 function isMessageEvent(event) {
     return event.type === 'print';
 }
+
+
+/***/ }),
+
+/***/ 6956:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DotnetNunitLegacyParser = void 0;
+const xml2js_1 = __nccwpck_require__(6189);
+const node_utils_1 = __nccwpck_require__(5824);
+const path_utils_1 = __nccwpck_require__(4070);
+const test_results_1 = __nccwpck_require__(2768);
+class DotnetNunitLegacyParser {
+    options;
+    assumedWorkDir;
+    constructor(options) {
+        this.options = options;
+    }
+    async parse(path, content) {
+        const ju = await this.getNunitReport(path, content);
+        return this.getTestRunResult(path, ju);
+    }
+    async getNunitReport(path, content) {
+        try {
+            return (await (0, xml2js_1.parseStringPromise)(content));
+        }
+        catch (e) {
+            throw new Error(`Invalid XML at ${path}\n\n${e}`);
+        }
+    }
+    getTestRunResult(path, nunit) {
+        const suites = [];
+        const time = parseFloat(nunit['test-results'].$.time);
+        this.populateTestCasesRecursive(suites, [], nunit['test-results']['test-suite']);
+        return new test_results_1.TestRunResult(path, suites, time);
+    }
+    populateTestCasesRecursive(result, suitePath, testSuites) {
+        if (testSuites === undefined) {
+            return;
+        }
+        for (const suite of testSuites) {
+            if (!suite['results']) {
+                continue;
+            }
+            suitePath.push(suite);
+            const results = suite['results'][0];
+            this.populateTestCasesRecursive(result, suitePath, results['test-suite']);
+            const testcases = results['test-case'];
+            if (testcases !== undefined) {
+                for (const testcase of testcases) {
+                    this.addTestCase(result, suitePath, testcase);
+                }
+            }
+            suitePath.pop();
+        }
+    }
+    addTestCase(result, suitePath, testCase) {
+        // The last suite in the suite path is the "group".
+        // The rest are concatenated together to form the "suite".
+        // But ignore "Theory" suites.
+        const suitesWithoutTheories = suitePath.filter(suite => suite.$.type !== 'Theory');
+        const suiteName = suitesWithoutTheories
+            .slice(0, suitesWithoutTheories.length - 1)
+            .map(suite => suite.$.name)
+            .join('.');
+        const groupName = suitesWithoutTheories[suitesWithoutTheories.length - 1].$.name;
+        let existingSuite = result.find(existingSuite => existingSuite.name === suiteName);
+        if (existingSuite === undefined) {
+            existingSuite = new test_results_1.TestSuiteResult(suiteName, []);
+            result.push(existingSuite);
+        }
+        let existingGroup = existingSuite.groups.find(existingGroup => existingGroup.name === groupName);
+        if (existingGroup === undefined) {
+            existingGroup = new test_results_1.TestGroupResult(groupName, []);
+            existingSuite.groups.push(existingGroup);
+        }
+        existingGroup.tests.push(new test_results_1.TestCaseResult(testCase.$.name, this.getTestExecutionResult(testCase), parseFloat(testCase.$.time), this.getTestCaseError(testCase)));
+    }
+    getTestExecutionResult(test) {
+        if (test.$.result === 'Failed' || test.failure)
+            return 'failed';
+        if (test.$.result === 'Skipped' || test.$.result === 'Ignored' || test.$.result === 'Inconclusive')
+            return 'skipped';
+        return 'success';
+    }
+    getTestCaseError(tc) {
+        if (!this.options.parseErrors ||
+            ((!tc.failure || tc.failure.length === 0) && (!tc.reason || tc.reason.length === 0))) {
+            return undefined;
+        }
+        const details = (tc.failure && tc.failure[0]) || (tc.reason && tc.reason[0]);
+        if (!details) {
+            throw new Error('details is undefined');
+        }
+        let path;
+        let line;
+        if (details['stack-trace'] !== undefined && details['stack-trace'].length > 0) {
+            const src = (0, node_utils_1.getExceptionSource)(details['stack-trace'][0], this.options.trackedFiles, file => this.getRelativePath(file));
+            if (src) {
+                path = src.path;
+                line = src.line;
+            }
+        }
+        return {
+            path,
+            line,
+            message: details.message && details.message.length > 0 ? details.message[0] : '',
+            details: details['stack-trace'] && details['stack-trace'].length > 0 ? details['stack-trace'][0] : ''
+        };
+    }
+    getRelativePath(path) {
+        path = (0, path_utils_1.normalizeFilePath)(path);
+        const workDir = this.getWorkDir(path);
+        if (workDir !== undefined && path.startsWith(workDir)) {
+            path = path.substring(workDir.length);
+        }
+        return path;
+    }
+    getWorkDir(path) {
+        return (this.options.workDir ??
+            this.assumedWorkDir ??
+            (this.assumedWorkDir = (0, path_utils_1.getBasePath)(path, this.options.trackedFiles)));
+    }
+}
+exports.DotnetNunitLegacyParser = DotnetNunitLegacyParser;
 
 
 /***/ }),
