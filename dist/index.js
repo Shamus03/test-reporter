@@ -2614,7 +2614,7 @@ function slug(name) {
         .replace(/[./\\]/g, '-')
         .replace(/[^\w-]/g, '');
     const id = `user-content-${slugId}`;
-    const link = `#${slugId}`;
+    const link = `#user-content-${slugId}`;
     return { id, link };
 }
 
