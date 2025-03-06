@@ -2613,8 +2613,8 @@ function slug(name) {
         .replace(/_/g, '')
         .replace(/[./\\]/g, '-')
         .replace(/[^\w-]/g, '');
-    const id = slugId;
-    const link = `#${slugId}`;
+    const id = `user-content-${slugId}`;
+    const link = `#user-content-${slugId}`;
     return { id, link };
 }
 

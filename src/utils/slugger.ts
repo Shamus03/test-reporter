@@ -8,7 +8,7 @@ export function slug(name: string): {id: string; link: string} {
     .replace(/[./\\]/g, '-')
     .replace(/[^\w-]/g, '')
 
-  const id = slugId
-  const link = `#${slugId}`
+  const id = `user-content-${slugId}`
+  const link = `#user-content-${slugId}`
   return {id, link}
 }
