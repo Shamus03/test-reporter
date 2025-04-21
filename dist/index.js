@@ -244,6 +244,7 @@ const dart_json_parser_1 = __nccwpck_require__(4528);
 const dotnet_nunit_parser_1 = __nccwpck_require__(5706);
 const dotnet_nunit_legacy_parser_1 = __nccwpck_require__(6956);
 const dotnet_trx_parser_1 = __nccwpck_require__(2664);
+const golang_json_parser_1 = __nccwpck_require__(7054);
 const java_junit_parser_1 = __nccwpck_require__(676);
 const jest_junit_parser_1 = __nccwpck_require__(1113);
 const mocha_json_parser_1 = __nccwpck_require__(6043);
@@ -431,6 +432,8 @@ class TestReporter {
                 return new dotnet_nunit_legacy_parser_1.DotnetNunitLegacyParser(options);
             case 'dotnet-trx':
                 return new dotnet_trx_parser_1.DotnetTrxParser(options);
+            case 'golang-json':
+                return new golang_json_parser_1.GolangJsonParser(options);
             case 'flutter-json':
                 return new dart_json_parser_1.DartJsonParser(options, 'flutter');
             case 'java-junit':
@@ -1146,6 +1149,105 @@ class DotnetTrxParser {
     }
 }
 exports.DotnetTrxParser = DotnetTrxParser;
+
+
+/***/ }),
+
+/***/ 7054:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GolangJsonParser = void 0;
+const test_results_1 = __nccwpck_require__(2768);
+class GolangJsonParser {
+    options;
+    assumedWorkDir;
+    constructor(options) {
+        this.options = options;
+    }
+    async parse(path, content) {
+        const events = await this.getGolangTestEvents(path, content);
+        return this.getTestRunResult(path, events);
+    }
+    async getGolangTestEvents(path, content) {
+        return content.trim().split('\n').map((line, index) => {
+            try {
+                return JSON.parse(line);
+            }
+            catch (e) {
+                throw new Error(`Invalid JSON at ${path} line ${index + 1}\n\n${e}`);
+            }
+        });
+    }
+    getTestRunResult(path, events) {
+        const eventGroups = new Map();
+        for (const event of events) {
+            if (!event.Test) {
+                continue;
+            }
+            const k = `${event.Package}/${event.Test}`;
+            let g = eventGroups.get(k);
+            if (!g) {
+                g = [];
+                eventGroups.set(k, g);
+            }
+            g.push(event);
+        }
+        const suites = [];
+        for (const eventGroup of eventGroups.values()) {
+            const event = eventGroup[0];
+            let suite = suites.find(s => s.name === event.Package);
+            if (!suite) {
+                suite = new test_results_1.TestSuiteResult(event.Package, []);
+                suites.push(suite);
+            }
+            if (!event.Test) {
+                continue;
+            }
+            let groupName;
+            let testName;
+            [groupName, testName] = event.Test.split('/', 2);
+            if (!testName) {
+                testName = groupName;
+                groupName = null;
+            }
+            let group = suite.groups.find(g => g.name === groupName);
+            if (!group) {
+                group = new test_results_1.TestGroupResult(groupName, []);
+                suite.groups.push(group);
+            }
+            const lastEvent = eventGroup.at(-1);
+            const result = lastEvent.Action === 'pass' ? 'success'
+                : lastEvent.Action === 'skip' ? 'skipped'
+                    : 'failed';
+            if (lastEvent.Elapsed === undefined) {
+                throw new Error('missing elapsed on final test event');
+            }
+            const time = lastEvent.Elapsed * 1000;
+            let error = undefined;
+            if (result !== 'success') {
+                const outputEvents = eventGroup
+                    .filter(e => e.Action === 'output')
+                    .map(e => e.Output ?? '')
+                    // Go output prepends indentation to help group tests - remove it
+                    .map(o => o.replace(/^    /, ''));
+                // First and last lines will be generic "test started" and "test finished" lines - remove them
+                outputEvents.splice(0, 1);
+                outputEvents.splice(-1, 1);
+                const details = outputEvents.join('');
+                error = {
+                    message: details,
+                    details: details
+                };
+            }
+            group.tests.push(new test_results_1.TestCaseResult(testName, result, time, error));
+        }
+        return new test_results_1.TestRunResult(path, suites);
+    }
+}
+exports.GolangJsonParser = GolangJsonParser;
 
 
 /***/ }),
