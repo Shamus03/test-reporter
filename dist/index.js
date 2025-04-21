@@ -1488,7 +1488,7 @@ class JestJunitParser {
         if (!this.options.parseErrors || !tc.failure) {
             return undefined;
         }
-        const details = tc.failure[0];
+        const details = typeof tc.failure[0] === 'string' ? tc.failure[0] : tc.failure[0]['_'];
         let path;
         let line;
         const src = (0, node_utils_1.getExceptionSource)(details, this.options.trackedFiles, file => this.getRelativePath(file));
@@ -2011,7 +2011,7 @@ function getSuitesReport(tr, runIndex, options) {
     const sections = [];
     const suites = options.listSuites === 'failed' ? tr.failedSuites : tr.suites;
     if (options.listSuites !== 'none') {
-        const trSlug = makeRunSlug(runIndex);
+        const trSlug = makeRunSlug(runIndex, options);
         const nameLink = `<a id="${trSlug.id}" href="${options.baseUrl + trSlug.link}">${tr.path}</a>`;
         const icon = getResultIcon(tr.result);
         sections.push(`## ${icon}\xa0${nameLink}`);
@@ -2025,7 +2025,7 @@ function getSuitesReport(tr, runIndex, options) {
                 const tsTime = (0, markdown_utils_1.formatTime)(s.time);
                 const tsName = s.name;
                 const skipLink = options.listTests === 'none' || (options.listTests === 'failed' && s.result !== 'failed');
-                const tsAddr = options.baseUrl + makeSuiteSlug(runIndex, suiteIndex).link;
+                const tsAddr = options.baseUrl + makeSuiteSlug(runIndex, suiteIndex, options).link;
                 const tsNameLink = skipLink ? tsName : (0, markdown_utils_1.link)(tsName, tsAddr);
                 const passed = s.passed > 0 ? `${s.passed} ${markdown_utils_1.Icon.success}` : '';
                 const failed = s.failed > 0 ? `${s.failed} ${markdown_utils_1.Icon.fail}` : '';
@@ -2053,7 +2053,7 @@ function getTestsReport(ts, runIndex, suiteIndex, options) {
     }
     const sections = [];
     const tsName = ts.name;
-    const tsSlug = makeSuiteSlug(runIndex, suiteIndex);
+    const tsSlug = makeSuiteSlug(runIndex, suiteIndex, options);
     const tsNameLink = `<a id="${tsSlug.id}" href="${options.baseUrl + tsSlug.link}">${tsName}</a>`;
     const icon = getResultIcon(ts.result);
     sections.push(`### ${icon}\xa0${tsNameLink}`);
@@ -2079,13 +2079,13 @@ function getTestsReport(ts, runIndex, suiteIndex, options) {
     sections.push('```');
     return sections;
 }
-function makeRunSlug(runIndex) {
+function makeRunSlug(runIndex, options) {
     // use prefix to avoid slug conflicts after escaping the paths
-    return (0, slugger_1.slug)(`r${runIndex}`);
+    return (0, slugger_1.slug)(`r${runIndex}`, options);
 }
-function makeSuiteSlug(runIndex, suiteIndex) {
+function makeSuiteSlug(runIndex, suiteIndex, options) {
     // use prefix to avoid slug conflicts after escaping the paths
-    return (0, slugger_1.slug)(`r${runIndex}s${suiteIndex}`);
+    return (0, slugger_1.slug)(`r${runIndex}s${suiteIndex}`, options);
 }
 function getResultIcon(result) {
     switch (result) {
@@ -2604,17 +2604,15 @@ function getBasePath(path, trackedFiles) {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.slug = slug;
-// Returns HTML element id and href link usable as manual anchor links
-// This is needed because Github in check run summary doesn't automatically
-// create links out of headings as it normally does for other markdown content
-function slug(name) {
+function slug(name, options) {
     const slugId = name
         .trim()
         .replace(/_/g, '')
         .replace(/[./\\]/g, '-')
         .replace(/[^\w-]/g, '');
     const id = `user-content-${slugId}`;
-    const link = `#user-content-${slugId}`;
+    // When using the Action Summary for display, links must include the "user-content-" prefix.
+    const link = options.useActionsSummary ? `#${id}` : `#${slugId}`;
     return { id, link };
 }
 
