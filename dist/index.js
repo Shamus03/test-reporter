@@ -1207,8 +1207,9 @@ class GolangJsonParser {
                 continue;
             }
             let groupName;
-            let testName;
-            [groupName, testName] = event.Test.split('/', 2);
+            let rest;
+            [groupName, ...rest] = event.Test.split('/');
+            let testName = rest.join('/');
             if (!testName) {
                 testName = groupName;
                 groupName = null;
