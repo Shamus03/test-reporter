@@ -57088,12 +57088,12 @@ class DotnetNunitLegacyParser {
             .map(suite => suite.$.name)
             .join('.');
         const groupName = suitesWithoutTheories[suitesWithoutTheories.length - 1].$.name;
-        let existingSuite = result.find(existingSuite => existingSuite.name === suiteName);
+        let existingSuite = result.find(es => es.name === suiteName);
         if (existingSuite === undefined) {
             existingSuite = new TestSuiteResult(suiteName, []);
             result.push(existingSuite);
         }
-        let existingGroup = existingSuite.groups.find(existingGroup => existingGroup.name === groupName);
+        let existingGroup = existingSuite.groups.find(eg => eg.name === groupName);
         if (existingGroup === undefined) {
             existingGroup = new TestGroupResult(groupName, []);
             existingSuite.groups.push(existingGroup);
