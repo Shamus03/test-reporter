@@ -1,9 +1,9 @@
-import {ParseOptions, TestParser} from '../../test-parser'
+import {ParseOptions, TestParser} from '../../test-parser.js'
 import {parseStringPromise} from 'xml2js'
 
-import {NunitReport, TestCase, TestSuite} from './dotnet-nunit-types'
-import {getExceptionSource} from '../../utils/node-utils'
-import {getBasePath, normalizeFilePath} from '../../utils/path-utils'
+import {NunitReport, TestCase, TestSuite} from './dotnet-nunit-types.js'
+import {getExceptionSource} from '../../utils/node-utils.js'
+import {getBasePath, normalizeFilePath} from '../../utils/path-utils.js'
 
 import {
   TestExecutionResult,
@@ -12,7 +12,7 @@ import {
   TestGroupResult,
   TestCaseResult,
   TestCaseError
-} from '../../test-results'
+} from '../../test-results.js'
 
 export class DotnetNunitParser implements TestParser {
   assumedWorkDir: string | undefined
@@ -77,13 +77,13 @@ export class DotnetNunitParser implements TestParser {
       .join('.')
     const groupName = suitesWithoutTheories[suitesWithoutTheories.length - 1].$.name
 
-    let existingSuite = result.find(existingSuite => existingSuite.name === suiteName)
+    let existingSuite = result.find(suite => suite.name === suiteName)
     if (existingSuite === undefined) {
       existingSuite = new TestSuiteResult(suiteName, [])
       result.push(existingSuite)
     }
 
-    let existingGroup = existingSuite.groups.find(existingGroup => existingGroup.name === groupName)
+    let existingGroup = existingSuite.groups.find(group => group.name === groupName)
     if (existingGroup === undefined) {
       existingGroup = new TestGroupResult(groupName, [])
       existingSuite.groups.push(existingGroup)
@@ -136,7 +136,7 @@ export class DotnetNunitParser implements TestParser {
     path = normalizeFilePath(path)
     const workDir = this.getWorkDir(path)
     if (workDir !== undefined && path.startsWith(workDir)) {
-      path = path.substr(workDir.length)
+      path = path.substring(workDir.length)
     }
     return path
   }

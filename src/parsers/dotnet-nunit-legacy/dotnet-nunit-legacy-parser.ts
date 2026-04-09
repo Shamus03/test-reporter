@@ -1,9 +1,9 @@
-import {ParseOptions, TestParser} from '../../test-parser'
-import {parseStringPromise} from 'xml2js'
+import { ParseOptions, TestParser } from '../../test-parser.js'
+import { parseStringPromise } from 'xml2js'
 
-import {NunitReport, TestCase, TestSuite} from './dotnet-nunit-legacy-types'
-import {getExceptionSource} from '../../utils/node-utils'
-import {getBasePath, normalizeFilePath} from '../../utils/path-utils'
+import { NunitReport, TestCase, TestSuite } from './dotnet-nunit-legacy-types.js'
+import { getExceptionSource } from '../../utils/node-utils.js'
+import { getBasePath, normalizeFilePath } from '../../utils/path-utils.js'
 
 import {
   TestExecutionResult,
@@ -12,12 +12,12 @@ import {
   TestGroupResult,
   TestCaseResult,
   TestCaseError
-} from '../../test-results'
+} from '../../test-results.js'
 
 export class DotnetNunitLegacyParser implements TestParser {
   assumedWorkDir: string | undefined
 
-  constructor(readonly options: ParseOptions) {}
+  constructor(readonly options: ParseOptions) { }
 
   async parse(path: string, content: string): Promise<TestRunResult> {
     const ju = await this.getNunitReport(path, content)
