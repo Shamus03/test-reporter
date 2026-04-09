@@ -1,6 +1,6 @@
-import { ParseOptions, TestParser } from '../../test-parser.js'
+import {ParseOptions, TestParser} from '../../test-parser.js'
 
-import { GoTestEvent } from './golang-json-types.js'
+import {GoTestEvent} from './golang-json-types.js'
 
 import {
   TestExecutionResult,
@@ -14,7 +14,7 @@ import {
 export class GolangJsonParser implements TestParser {
   assumedWorkDir: string | undefined
 
-  constructor(readonly options: ParseOptions) { }
+  constructor(readonly options: ParseOptions) {}
 
   async parse(path: string, content: string): Promise<TestRunResult> {
     const events = await this.getGolangTestEvents(path, content)

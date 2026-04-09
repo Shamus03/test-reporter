@@ -5,7 +5,7 @@ export interface NunitReport {
 export interface TestResults {
   $: {
     // there is a time attribute here, but it is the time of day the test ran, not the duration
-    // time: string
+    time: unknown
   }
   'test-suite'?: TestSuite[]
 }

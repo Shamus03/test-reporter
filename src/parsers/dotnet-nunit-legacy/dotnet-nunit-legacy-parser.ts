@@ -1,9 +1,9 @@
-import { ParseOptions, TestParser } from '../../test-parser.js'
-import { parseStringPromise } from 'xml2js'
+import {ParseOptions, TestParser} from '../../test-parser.js'
+import {parseStringPromise} from 'xml2js'
 
-import { NunitReport, TestCase, TestSuite } from './dotnet-nunit-legacy-types.js'
-import { getExceptionSource } from '../../utils/node-utils.js'
-import { getBasePath, normalizeFilePath } from '../../utils/path-utils.js'
+import {NunitReport, TestCase, TestSuite} from './dotnet-nunit-legacy-types.js'
+import {getExceptionSource} from '../../utils/node-utils.js'
+import {getBasePath, normalizeFilePath} from '../../utils/path-utils.js'
 
 import {
   TestExecutionResult,
@@ -17,7 +17,7 @@ import {
 export class DotnetNunitLegacyParser implements TestParser {
   assumedWorkDir: string | undefined
 
-  constructor(readonly options: ParseOptions) { }
+  constructor(readonly options: ParseOptions) {}
 
   async parse(path: string, content: string): Promise<TestRunResult> {
     const ju = await this.getNunitReport(path, content)
@@ -82,13 +82,13 @@ export class DotnetNunitLegacyParser implements TestParser {
       .join('.')
     const groupName = suitesWithoutTheories[suitesWithoutTheories.length - 1].$.name
 
-    let existingSuite = result.find(existingSuite => existingSuite.name === suiteName)
+    let existingSuite = result.find(es => es.name === suiteName)
     if (existingSuite === undefined) {
       existingSuite = new TestSuiteResult(suiteName, [])
       result.push(existingSuite)
     }
 
-    let existingGroup = existingSuite.groups.find(existingGroup => existingGroup.name === groupName)
+    let existingGroup = existingSuite.groups.find(eg => eg.name === groupName)
     if (existingGroup === undefined) {
       existingGroup = new TestGroupResult(groupName, [])
       existingSuite.groups.push(existingGroup)
